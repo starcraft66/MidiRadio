@@ -81,10 +81,10 @@ public class SequencerMidiPlayer implements Receiver, MidiPlayer {
 		if (currentSong >= midiFileNames.length)
 			currentSong = 0;
 		
-		playSong(midiFileNames[currentSong]);
+		playSong(midiFileNames[currentSong], false);
 	}
 	
-	public void playSong(String midiName) {
+	public void playSong(final String midiName, final boolean loop) {
 		
 		this.midiName = midiName;
 		
@@ -118,7 +118,11 @@ public class SequencerMidiPlayer implements Receiver, MidiPlayer {
 			
 				if (!sequencer.isRunning() || sequencer.getMicrosecondPosition() > sequencer.getMicrosecondLength()) {
 					stopPlaying();
-					playNextSong();
+					if (loop) {
+						playSong(midiName, true);
+					} else {
+						playNextSong();
+					}
 				}
 					
 			}

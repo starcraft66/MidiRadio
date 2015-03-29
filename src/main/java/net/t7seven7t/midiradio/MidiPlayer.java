@@ -20,6 +20,6 @@ public interface MidiPlayer {
 	
 	public void playNextSong();
 	
-	public void playSong(String midiName);
+	public void playSong(String midiName, boolean loop);
 	
 }

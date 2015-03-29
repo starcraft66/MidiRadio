@@ -37,7 +37,9 @@ public class OldMidiPlayer implements MidiPlayer {
 	private final List<Player> tunedIn = new ArrayList<Player>();
 	private final List<MidiTrack> midiTracks = new ArrayList<MidiTrack>();
 	private final Map<Integer, Integer> channelPatches = new HashMap<Integer, Integer>();
-	
+
+	private String loopSongName = null;
+	private boolean loopSong = false;
 	private boolean nowPlaying = false;
 	private float tempo;
 	private int resolution;
@@ -70,6 +72,7 @@ public class OldMidiPlayer implements MidiPlayer {
 	public void stopPlaying() {
 		
 		synchronized (midiTracks) {
+			loopSong = false;
 			nowPlaying = false;
 			midiTracks.clear();
 			timer.cancel();
@@ -85,10 +88,10 @@ public class OldMidiPlayer implements MidiPlayer {
 		if(currentSong >= midiFileNames.length)
 			currentSong = 0;
 		
-		playSong(midiFileNames[currentSong]);
+		playSong(midiFileNames[currentSong], false);
 	}
 	
-	public void playSong(final String midiName) {
+	public void playSong(final String midiName, boolean loop) {
 		
 		this.midiName = midiName;
 		
@@ -144,7 +147,7 @@ public class OldMidiPlayer implements MidiPlayer {
 			player.sendMessage(ChatColor.AQUA + "Now playing: " + ChatColor.YELLOW + midiName);
 		}
 		
-		timer.scheduleAtFixedRate(new TickTask(), MILLIS_PER_TICK, MILLIS_PER_TICK);
+		timer.scheduleAtFixedRate(new TickTask(loop, midiName), MILLIS_PER_TICK, MILLIS_PER_TICK);
 		
 	}
 	
@@ -207,10 +210,12 @@ public class OldMidiPlayer implements MidiPlayer {
 	
 	public class TickTask extends TimerTask {
 		
-		public TickTask() {
+		public TickTask(boolean loop, String song) {
 			super();
 			nowPlaying = true;
 			currentTick = 0;
+			String loopSongName = song;
+			boolean loopSong = loop;
 		}
 		
 		@Override
@@ -238,8 +243,12 @@ public class OldMidiPlayer implements MidiPlayer {
 						@Override
 						public void run() {
 							
-							playNextSong();
-							
+							if (loopSong) {
+								playSong(loopSongName, true);
+							} else {
+								playNextSong();
+							}
+
 						}
 						
 					}.runTask(plugin);
