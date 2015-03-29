@@ -31,10 +31,11 @@ public class MidiRadio extends JavaPlugin {
 						
 		initMidiPlayer();
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+		getServer().getPluginManager().registerEvents(new LoginListener(this), this);
 		
 		String[] midis = listMidiFiles();
 		if (midis.length > 0)
-			midiPlayer.playSong(midis[0]);
+			midiPlayer.playSong(midis[0], false);
 		
 	}
 	
@@ -67,7 +68,25 @@ public class MidiRadio extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
 		if (command.getName().equals("play") && (sender.hasPermission("midiradio.play") || sender.isOp())) {
-			
+
+			if (args.length == 2) {
+
+				if (args[1].equalsIgnoreCase("loop")) {
+
+					if (midiPlayer.isNowPlaying()) {
+
+						midiPlayer.stopPlaying();
+
+					}
+
+					midiPlayer.playSong(args[0], true);
+
+					return true;
+
+				}
+
+			}
+
 			if (args.length == 1) {
 				
 				if (midiPlayer.isNowPlaying()) {
@@ -76,7 +95,7 @@ public class MidiRadio extends JavaPlugin {
 					
 				}
 				
-				midiPlayer.playSong(args[0]);
+				midiPlayer.playSong(args[0], false);
 				
 				return true;
 				
