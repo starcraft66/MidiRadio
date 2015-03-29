@@ -62,7 +62,7 @@ public class OldMidiPlayer implements MidiPlayer {
 	
 	public void tuneIn(Player player) {
 		tunedIn.add(player);
-		player.sendMessage(ChatColor.AQUA + "Now playing: " + ChatColor.YELLOW + midiName);
+		//player.sendMessage(ChatColor.AQUA + "Now playing: " + ChatColor.YELLOW + midiName);
 	}
 	
 	public void tuneOut(Player player) {
@@ -143,9 +143,9 @@ public class OldMidiPlayer implements MidiPlayer {
 			System.err.println("Can't read file: " + midiName);
 		}
 		
-		for (Player player : tunedIn) {
+		/*for (Player player : tunedIn) {
 			player.sendMessage(ChatColor.AQUA + "Now playing: " + ChatColor.YELLOW + midiName);
-		}
+		}*/
 		
 		timer.scheduleAtFixedRate(new TickTask(loop, midiName), MILLIS_PER_TICK, MILLIS_PER_TICK);
 		
