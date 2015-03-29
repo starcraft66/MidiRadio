@@ -66,7 +66,7 @@ public class MidiRadio extends JavaPlugin {
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		if (command.getName().equals("play") && sender.hasPermission("midiradio.play")) {
+		if (command.getName().equals("play") && (sender.hasPermission("midiradio.play") || sender.isOp())) {
 			
 			if (args.length == 1) {
 				
@@ -112,7 +112,7 @@ public class MidiRadio extends JavaPlugin {
 					
 				}
 				
-				if (args[0].equalsIgnoreCase("out")) {
+				if (args[0].equalsIgnoreCase("out") && (sender.hasPermission("midiradio.play") || sender.isOp())) {
 					
 					midiPlayer.tuneOut(player);
 					return true;
